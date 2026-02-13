@@ -32,6 +32,13 @@ py-1 rounded"
             ⭐ {movie.rating}
           </span>
         </div>
+        
+        {/* Badge de genre */}
+        <div className="absolute bottom-2 left-2">
+          <span className={`${genreColors[movie.genre] || 'bg-gray-500'} px-3 py-1 rounded text-xs font-semibold text-white`}>
+            {movie.genre}
+          </span>
+        </div>
       </div>
       {/* Overlay au hover */}{" "}
       <div
@@ -39,6 +46,13 @@ py-1 rounded"
 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4"
       >
         <h3 className="text-xl font-bold mb-2">{movie.title}</h3>
+        
+        {/* Badge de genre dans l'overlay */}
+        <div className="mb-2">
+          <span className={`${genreColors[movie.genre] || 'bg-gray-500'} px-2 py-1 rounded text-xs font-semibold text-white`}>
+            {movie.genre}
+          </span>
+        </div>
 
         <div className="flex items-center space-x-3 mb-3 text-sm">
           <span className="text-green-400 fontsemibold">{movie.rating}/10</span>

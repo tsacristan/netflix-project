@@ -1,6 +1,6 @@
 import Navbar from "../components/common/Navbar";
 import MovieHero from "../components/movies/MovieHero";
-import MovieList from "../components/movies/MovieList";
+import MovieCarousel from "../components/movies/MovieCarousel";
 import Footer from "../components/layout/Footer";
 import moviesData from "../../../data/movies.json";
 
@@ -27,9 +27,9 @@ function Home() {
       
       <MovieHero movie={featuredMovie} />
       
-      <MovieList title="Films populaires" movies={popularMovies} />
+      <MovieCarousel title="Films populaires" movies={popularMovies} />
       
-      <MovieList title="Science-Fiction" movies={sciFiMovies} />
+      <MovieCarousel title="Science-Fiction" movies={sciFiMovies} />
 
       <Footer />
     </div>
