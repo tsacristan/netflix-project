@@ -1,4 +1,6 @@
+import { useState } from "react";
 import Button from "../common/Button";
+import MovieDescription from "./MovieDescription";
 // Couleurs par genre
  const genreColors = {
  'Action': 'bg-red-500',
@@ -10,6 +12,20 @@ import Button from "../common/Button";
  };
 
 function MovieCard({ movie }) {
+  // Créez les variables d'état nécessaires et initialisez-les
+  const [likes, setLikes] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  
+  // Créez la fonction qui permet au clic sur le bouton de liker une seule fois, sinon on enlève le like
+  const handleLike = () => {
+    if (isLiked) {
+      setLikes(likes - 1);
+      setIsLiked(false);
+    } else {
+      setLikes(likes + 1);
+      setIsLiked(true);
+    }
+  };
   return (
     <div
       className="group relative overflow-hidden rounded-lg cursor-pointer
@@ -43,32 +59,38 @@ py-1 rounded"
       {/* Overlay au hover */}{" "}
       <div
         className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent
-opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4"
+opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3"
       >
-        <h3 className="text-xl font-bold mb-2">{movie.title}</h3>
+        <h3 className="text-lg font-bold mb-1">{movie.title}</h3>
         
         {/* Badge de genre dans l'overlay */}
-        <div className="mb-2">
+        <div className="mb-1">
           <span className={`${genreColors[movie.genre] || 'bg-gray-500'} px-2 py-1 rounded text-xs font-semibold text-white`}>
             {movie.genre}
           </span>
         </div>
 
-        <div className="flex items-center space-x-3 mb-3 text-sm">
+        <div className="flex items-center space-x-3 mb-2 text-sm">
           <span className="text-green-400 fontsemibold">{movie.rating}/10</span>
           <span className="text-gray-400">{movie.year}</span>
           <span className="text-gray-400">{movie.duration}min</span>
         </div>
 
-        <p className="text-sm text-gray-300 mb-4 line-clamp-2">
-          {movie.description}
-        </p>
+        <MovieDescription description={movie.description}></MovieDescription>
+        
+        {/* Bouton de likes */}
+        <button 
+          onClick={handleLike}
+          className={`px-3 py-1 text-sm rounded mb-2 transition-colors ${isLiked ? 'bg-red-500' : 'bg-gray-500'}`}
+        >
+          {isLiked ? '❤' : '🤍'} {likes} likes
+        </button>
 
         <div className="flex flex-col sm:flex-row gap-2">
-          <Button size="sm" className="flex-1">
+          <Button size="sm" className="sm:w-auto">
             ▶ Louer {movie.price}€
           </Button>
-          <Button variant="outline" size="sm" className="flex-1">
+          <Button variant="outline" size="sm" className="sm:w-auto">
             + Info
           </Button>
         </div>
