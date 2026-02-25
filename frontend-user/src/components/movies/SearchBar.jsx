@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-function SearchBar({ movies = [], onSearch = () => {} }) {
+function SearchBar({ movies = [], onSearch = () => {}, onSelectMovie = () => {} }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -10,13 +10,12 @@ function SearchBar({ movies = [], onSearch = () => {} }) {
     }
 
     const normalizedSearch = searchTerm.toLowerCase();
-    return movies
-      .filter((movie) => {
-        return (
-          movie.title.toLowerCase().includes(normalizedSearch) ||
-          movie.description.toLowerCase().includes(normalizedSearch)
-        );
-      });
+    return movies.filter((movie) => {
+      return (
+        movie.title.toLowerCase().includes(normalizedSearch) ||
+        movie.description.toLowerCase().includes(normalizedSearch)
+      );
+    });
   }, [searchTerm, movies]);
 
   const suggestions = filteredResults.slice(0, 5);
@@ -32,6 +31,7 @@ function SearchBar({ movies = [], onSearch = () => {} }) {
   const handleSelect = (movie) => {
     setSearchTerm(movie.title);
     setIsOpen(false);
+    onSelectMovie(movie);
     onSearch([movie]);
   };
 
@@ -79,18 +79,26 @@ function SearchBar({ movies = [], onSearch = () => {} }) {
       </div>
 
       {isOpen && suggestions.length > 0 && (
-        <ul className="absolute z-50 w-full mt-2 bg-gray-900 border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+        <ul className="absolute top-full left-0 z-50 w-full mt-2 bg-gray-900 border border-gray-700 rounded-lg shadow-lg overflow-hidden">
           {suggestions.map((movie) => (
             <li key={movie.id}>
               <button
                 type="button"
                 onClick={() => handleSelect(movie)}
-                className="w-full text-left px-4 py-3 hover:bg-gray-800 transition-colors"
+                className="w-full text-left px-3 py-3 hover:bg-gray-800 transition-colors flex items-center gap-3"
               >
-                <p className="font-medium text-white">{movie.title}</p>
-                <p className="text-sm text-gray-400 line-clamp-1">
-                  {movie.description}
-                </p>
+                <img
+                  src={movie.poster}
+                  alt={movie.title}
+                  className="w-12 h-16 rounded object-cover shrink-0"
+                />
+                <div className="min-w-0">
+                  <p className="font-semibold text-white truncate">{movie.title}</p>
+                  <p className="text-sm text-gray-400 truncate">
+                    {movie.year ? `${movie.year} • ` : ""}
+                    {movie.genre}
+                  </p>
+                </div>
               </button>
             </li>
           ))}

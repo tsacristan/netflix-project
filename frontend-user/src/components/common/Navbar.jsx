@@ -1,24 +1,48 @@
 import { useState } from "react";
-import SearchBar from "./Searchbar";
-function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
+import SearchBar from "../movies/SearchBar";
+import CartButton from "./CartButton";
+function Navbar({
+  movies = [],
+  onSearch = () => {},
+  onSelectMovie = () => {},
+  cartItems = [],
+  onRemoveFromCart = () => {},
+}) {
+  const [isScrolled] = useState(false);
   // Note : useEffect sera vu au TP 03
   // Pour l'instant, version statique
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-colors duration-300 ${isScrolled ? "bg-black" : "bg-gradient-to-b from-black/80 to-transparent"}`}>
+      className={`fixed top-0 w-full z-50 transition-colors duration-300 ${isScrolled ? "bg-black" : "bg-linear-to-b from-black/80 to-transparent"}`}>
       <div className="container mx-auto px-4 py-4">
-        {/* Première ligne : Logo et User Section */}
-        <div className="flex items-center justify-between mb-4">
-          {/* Logo */}
-          <h1 className="text-primary text-3xl font-bold tracking-tight">
-            NETFLIX
-          </h1>
-          
-          {/* User Section */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            <h1 className="text-primary text-3xl font-bold tracking-tight">
+              NETFLIX
+            </h1>
+
+            <ul className="flex space-x-6">
+              <li>
+                <a href="#" className="hover:text-gray-300 transition-colors">
+                  Accueil
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-gray-300 transition-colors">
+                  Films
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-gray-300 transition-colors">
+                  Mes locations
+                </a>
+              </li>
+            </ul>
+          </div>
+
           <div className="flex items-center space-x-4">
-            <SearchBar />
-            {/* User Avatar */}
+            <SearchBar movies={movies} onSearch={onSearch} onSelectMovie={onSelectMovie} />
+            <CartButton cartItems={cartItems} onRemoveFromCart={onRemoveFromCart} />
             <div
               className="w-8 h-8 bg-primary rounded flex items-center
 justify-center cursor-pointer hover:bg-primary-dark transition-colors"
@@ -26,27 +50,6 @@ justify-center cursor-pointer hover:bg-primary-dark transition-colors"
               <span className="text-sm font-bold">U</span>
             </div>
           </div>
-        </div>
-        
-        {/* Deuxième ligne : Navigation Links */}
-        <div>
-          <ul className="flex space-x-6">
-            <li>
-              <a href="#" className="hover:text-gray-300 transition-colors">
-                Accueil
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-300 transition-colors">
-                Films
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-300 transition-colors">
-                Mes locations
-              </a>
-            </li>
-          </ul>
         </div>
       </div>
     </nav>
