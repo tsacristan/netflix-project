@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Rapports de tests / couverture (CI)
+coverage
+reports
