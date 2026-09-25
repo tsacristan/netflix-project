@@ -1,0 +1,52 @@
+# Pipeline CI du frontend-user (React + Vite + Vitest) avec analyse SonarCloud
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test-and-analyze:
+    name: Lint, tests et SonarCloud
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend-user
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # historique complet, nécessaire à SonarCloud
+
+      - name: Installer Node.js 22
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend-user/package-lock.json
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Lint (ESLint)
+        run: npm run lint
+
+      - name: Tests unitaires + couverture
+        run: npx vitest run --coverage
+
+      - name: Publier les rapports de tests et de couverture
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: rapports-tests
+          path: |
+            frontend-user/reports/
+            frontend-user/coverage/
+
+      - name: Analyse SonarCloud
+        uses: SonarSource/sonarqube-scan-action@v8
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
