@@ -1,4 +1,4 @@
-# Pipeline CI du frontend-user (React + Vite + Vitest) avec analyse SonarCloud
+# Pipeline CI du frontend-user (React + Vite + Vitest) : lint, tests, build et analyse SonarCloud
 name: CI
 
 on:
@@ -10,7 +10,9 @@ on:
 jobs:
   test-and-analyze:
     name: Lint, tests et SonarCloud
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # version figée : ubuntu-latest change d'OS sans prévenir
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     defaults:
       run:
         working-directory: frontend-user
@@ -37,6 +39,9 @@ jobs:
       - name: Tests unitaires + couverture
         run: npx vitest run --coverage
 
+      - name: Build de production (Vite)
+        run: npm run build
+
       - name: Publier les rapports de tests et de couverture
         if: always()
         uses: actions/upload-artifact@v7
@@ -46,7 +51,12 @@ jobs:
             frontend-user/reports/
             frontend-user/coverage/
 
+      # Lancée uniquement si le secret SONAR_TOKEN est configuré dans le dépôt,
+      # pour ne pas faire échouer la pipeline sur un problème de configuration.
       - name: Analyse SonarCloud
+        if: env.SONAR_TOKEN != ''
         uses: SonarSource/sonarqube-scan-action@v8
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: SonarCloud ignoré (secret absent)
+        if: env.SONAR_TOKEN == ''
+        run: echo "::warning::SONAR_TOKEN non défini, analyse SonarCloud ignorée"

@@ -1,20 +1,15 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
-import MovieDetail from "./pages/MovieDetail";
-import MyRentals from "./pages/MyRentals";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import NotFound from "./pages/NotFound";
+
+// Les pages MovieDetail, MyRentals, Login, Register et NotFound ne sont pas
+// encore créées : leurs routes sont retirées pour que le build passe.
+// Toute URL inconnue renvoie vers l'accueil en attendant.
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/movie/:id" element={<MovieDetail />} />
-        <Route path="/my-rentals" element={<MyRentals />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
